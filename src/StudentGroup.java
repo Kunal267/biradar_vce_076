@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+
 /**
  * A fix-sized array of students
  * array length should always be equal to the number of stored elements
@@ -18,42 +20,30 @@ public class StudentGroup implements StudentArrayOperation {
 	 * DO NOT remove or change this constructor, it will be used during task check
 	 * @param length
 	 */
-	ArrayList<Student> std;
 	public StudentGroup(int length) {
 		this.students = new Student[length];
-		 std=new ArrayList<Student>();
 	}
 
 	@Override
 	public Student[] getStudents() {
+		return this.students;
 		// Add your implementation here
-	    
-		return students;
+		
 	}
-	public void toArray()
-	{
-	   students=new Student[std.size()];
-	   for(int i=0;i<std.size();i++)
-		   students[i]=std.get(i);
-	}
-	
 
 	@Override
 	public void setStudents(Student[] students) {
 		// Add your implementation here
-		
 		if(students==null)
 			throw new IllegalArgumentException();
 		else
-		{for(int i=0;i<students.length;i++)
-			std.add(students[i]);
-		}
+			this.students=students;
 	}
 
 	@Override
 	public Student getStudent(int index) {
 		// Add your implementation here
-		if(index==0||index>=students.length)
+		if(index<0||index>=students.length)
 			throw new IllegalArgumentException();
 		return students[index];
 	}
@@ -61,103 +51,165 @@ public class StudentGroup implements StudentArrayOperation {
 	@Override
 	public void setStudent(Student student, int index) {
 		// Add your implementation here
-		if(student==null||index==0||index>=students.length)
-			 throw new IllegalArgumentException();
-		else
-		std.set(index,student);
+		if(index<0||index>=students.length||student==null)
+			throw new IllegalArgumentException();
+		this.students[index]=student;
+		
 		
 	}
 
 	@Override
 	public void addFirst(Student student) {
-		// Add your implementation here
-		int i;
-		if(students==null)
+		if(student==null)
 			throw new IllegalArgumentException();
-		else
-		{
-			
-			std.add(0,student);
-		}
+		this.students= Arrays.copyOf(this.students, this.students.length + 1);
+		for(int i=1;i<this.students.length;i++)
+			students[i]=students[i-1];
+		students[0]=student;
+		// Add your implementation here
 	}
 
 	@Override
 	public void addLast(Student student) {
 		// Add your implementation here
-	  std.add(std.size()+1,student);
+		if(student==null)
+			throw new IllegalArgumentException();
+		this.students= Arrays.copyOf(this.students, this.students.length + 1);
+		int n=this.students.length;
+		students[n-1]=student;
 	}
 
 	@Override
 	public void add(Student student, int index) {
 		// Add your implementation here
-		if(student==null||index==0||index>=students.length)
-			 throw new IllegalArgumentException();
-		else
-			std.add(index,student);
+		if(index<0||index>=students.length||student==null)
+			throw new IllegalArgumentException();
+		this.students= Arrays.copyOf(this.students, this.students.length + 1);
+		for(int i=this.students.length-1;i>index;i++)
+			students[i]=students[i-1];
+		students[index]=student;
 	}
 
 	@Override
 	public void remove(int index) {
 		// Add your implementation here
-		if(index==0||index>=students.length)
-			 throw new IllegalArgumentException();
-		else
-			std.remove(index);
+		if(index<0||index>=students.length)
+			throw new IllegalArgumentException();
+		for(int i=index;i<this.students.length-1;i++)
+			students[i]=students[i+1];
+		int n=this.students.length-1;
+		this.students= Arrays.copyOfRange(this.students, 0,n );
 	}
 
 	@Override
 	public void remove(Student student) {
 		// Add your implementation here
-		if(std.contains(student))
-			std.remove(student);
-		else if(student==null)
-			throw  new IllegalArgumentException();
-		else
-			System.out.println("Student not exist");
+		if(student==null)
+			throw new IllegalArgumentException();
+		int j=0;
+		for(int i=0;i<this.students.length-1;i++)
+			if(this.students[i].equals(student))
+			{
+				j=i;
+				break;
+			}
+		if(j==0)
+			throw new IllegalArgumentException();
+		for(int i=j;i<this.students.length-1;i++)
+			students[i]=students[i+1];
+		int n=this.students.length;
+		this.students= Arrays.copyOfRange(this.students, 0,n );
 	}
 
 	@Override
 	public void removeFromIndex(int index) {
 		// Add your implementation here
-		if(index==0||index>=students.length)
+		if(index<0||index>=students.length)
 			throw new IllegalArgumentException();
-		else
-		    std.remove(index);
+		this.students= Arrays.copyOfRange(this.students, 0,index+1 );
 	}
 
 	@Override
 	public void removeFromElement(Student student) {
-		// Add your implementation here
 		if(student==null)
-			throw  new IllegalArgumentException();
-		else
-			{Iterator it=std.iterator();
-			 while(it.hasNext())
-				 if(it.next()!=student)
-					 std.remove(it.next());
+			throw new IllegalArgumentException();
+		int j=0;
+		for(int i=0;i<this.students.length-1;i++)
+			if(this.students[i].equals(student))
+			{
+				j=i;
+				break;
 			}
+		if(j==0)
+			throw new IllegalArgumentException();
+		this.students= Arrays.copyOfRange(this.students, 0,j+1 );
+		// Add your implementation here
 	}
 
 	@Override
 	public void removeToIndex(int index) {
 		// Add your implementation here
+		if(index<0||index>=students.length)
+			throw new IllegalArgumentException();
+		int n=this.students.length;
+		this.students= Arrays.copyOfRange(this.students, index,n );
 		
 	}
 
 	@Override
 	public void removeToElement(Student student) {
 		// Add your implementation here
+		if(student==null)
+			throw new IllegalArgumentException();
+		int j=0;
+		for(int i=0;i<this.students.length-1;i++)
+			if(this.students[i].equals(student))
+			{
+				j=i;
+				break;
+			}
+		if(j==0)
+			throw new IllegalArgumentException();
+		int n=this.students.length;
+		this.students= Arrays.copyOfRange(this.students, j,n );
 	}
 
 	@Override
 	public void bubbleSort() {
 		// Add your implementation here
+		int n=this.students.length;
+	   for(int i=0;i<n-1;i++)
+	   {
+		   for(int j=0;j<n-i-1;j++)
+		   {
+			   if(students[j].compareTo(students[j+1])<0)
+			   {
+				   Student s=this.students[i];
+				   this.students[i]=this.students[j];
+				   this.students[j]=s;
+			   }
+		   }
+	   }
 	}
 
 	@Override
 	public Student[] getByBirthDate(Date date) {
 		// Add your implementation here
-		return null;
+		if(date==null)
+			throw new IllegalArgumentException();
+		Student[] s=new Student[this.students.length-1];
+		int j=0;
+		for(int i=0;i<this.students.length-1;i++)
+		{
+			Date d=students[i].getBirthDate();
+			if(d.compareTo(date)<0)
+				{
+				s[j]=students[i];
+				j++;
+				}
+		}
+		s=Arrays.copyOfRange(s, 0,j );
+		return s;
 	}
 
 	@Override
